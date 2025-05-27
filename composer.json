@@ -27,7 +27,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "R94ever\\PHPAI\\PHPAIServiceProvider"
+                "R94ever\\PHPAI\\AIServiceProvider"
             ]
         }
     },

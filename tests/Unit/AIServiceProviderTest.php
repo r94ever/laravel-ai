@@ -3,12 +3,10 @@
 namespace R94ever\PHPAI\Tests\Unit;
 
 use R94ever\PHPAI\AI;
-use R94ever\PHPAI\Contracts\AIProvider;
 use R94ever\PHPAI\Facades\AI as AIFacade;
-use R94ever\PHPAI\PHPAIServiceProvider;
 use R94ever\PHPAI\Tests\TestCase;
 
-class PHPAIServiceProviderTest extends TestCase
+class AIServiceProviderTest extends TestCase
 {
     public function test_it_registers_singleton()
     {
