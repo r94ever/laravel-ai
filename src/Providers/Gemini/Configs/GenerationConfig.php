@@ -3,11 +3,11 @@
 namespace R94ever\PHPAI\Providers\Gemini\Configs;
 
 use BackedEnum;
-use R94ever\PHPAI\Contracts\AITextGenerationConfig;
+use R94ever\PHPAI\Contracts\AIGenerationConfig;
 use R94ever\PHPAI\Exceptions\ChatbotException;
 use R94ever\PHPAI\Objects\ChatMessage;
 
-class TextGenerationConfig implements AITextGenerationConfig
+class GenerationConfig implements AIGenerationConfig
 {
     /**
      * The temperature for text generation.
@@ -65,9 +65,9 @@ class TextGenerationConfig implements AITextGenerationConfig
      * Set the instruction message for the AI text generation.
      *
      * @param ChatMessage $instruction The instruction message to set.
-     * @return AITextGenerationConfig
+     * @return AIGenerationConfig
      */
-    public function setInstruction(ChatMessage $instruction): AITextGenerationConfig
+    public function setInstruction(ChatMessage $instruction): AIGenerationConfig
     {
         $this->instruction = $instruction;
 
@@ -88,9 +88,9 @@ class TextGenerationConfig implements AITextGenerationConfig
      * Set the chat model for text generation.
      *
      * @param BackedEnum $chatModel The chat model to set.
-     * @return AITextGenerationConfig
+     * @return AIGenerationConfig
      */
-    public function setChatModel(BackedEnum $chatModel): AITextGenerationConfig
+    public function setChatModel(BackedEnum $chatModel): AIGenerationConfig
     {
         $this->chatModel = $chatModel;
 
@@ -111,9 +111,9 @@ class TextGenerationConfig implements AITextGenerationConfig
      * Set the temperature for text generation.
      *
      * @param float|int $temperature The temperature value to set.
-     * @return AITextGenerationConfig
+     * @return AIGenerationConfig
      */
-    public function setTemperature(float|int $temperature): AITextGenerationConfig
+    public function setTemperature(float|int $temperature): AIGenerationConfig
     {
         $this->temperature = $temperature;
 
@@ -134,10 +134,10 @@ class TextGenerationConfig implements AITextGenerationConfig
      * Set the maximum number of output tokens for text generation.
      *
      * @param float|int $maxOutputTokens The maximum output tokens to set.
-     * @return AITextGenerationConfig
+     * @return AIGenerationConfig
      * @throws ChatbotException
      */
-    public function setMaxOutputTokens(float|int  $maxOutputTokens): AITextGenerationConfig
+    public function setMaxOutputTokens(float|int  $maxOutputTokens): AIGenerationConfig
     {
         if ($maxOutputTokens <= 0) {
             throw ChatbotException::invalidMaxOutputTokens($maxOutputTokens);
@@ -162,10 +162,10 @@ class TextGenerationConfig implements AITextGenerationConfig
      * Set the top P value for nucleus sampling.
      *
      * @param float|int $topP The top P value to set.
-     * @return AITextGenerationConfig
+     * @return AIGenerationConfig
      * @throws ChatbotException
      */
-    public function setTopP(float|int  $topP): AITextGenerationConfig
+    public function setTopP(float|int  $topP): AIGenerationConfig
     {
         if ($topP < 0 || $topP > 1) {
             throw ChatbotException::invalidTopP($topP);
@@ -190,10 +190,10 @@ class TextGenerationConfig implements AITextGenerationConfig
      * Set the top K value for top-k sampling.
      *
      * @param float|int $topK The top K value to set.
-     * @return AITextGenerationConfig
+     * @return AIGenerationConfig
      * @throws ChatbotException
      */
-    public function setTopK(float|int  $topK): AITextGenerationConfig
+    public function setTopK(float|int  $topK): AIGenerationConfig
     {
         if ($topK < 0) {
             throw ChatbotException::invalidTopK($topK);
