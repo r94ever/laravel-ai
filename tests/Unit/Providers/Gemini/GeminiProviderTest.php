@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Http;
 use Mockery;
 use R94ever\PHPAI\Contracts\AIGenerationConfig;
 use R94ever\PHPAI\Contracts\AITextGeneratorResponse;
+use R94ever\PHPAI\Objects\ChatHistory;
 use R94ever\PHPAI\Objects\ChatMessage;
 use R94ever\PHPAI\Providers\Gemini\ChatModel;
 use R94ever\PHPAI\Providers\Gemini\GeminiProvider;
@@ -147,6 +148,55 @@ class GeminiProviderTest extends TestCase
         $this->assertEquals('', $response->getModelVersion());
         $this->assertEquals('', $response->getResponseId());
     }
+
+    public function test_it_includes_chat_history_in_request()
+    {
+        $history = new ChatHistory([
+            new ChatMessage('What is your name?'),
+            new ChatMessage('My name is AI Assistant', ChatMessage::ROLE_ASSISTANT),
+            new ChatMessage('How old are you?')
+        ]);
+        
+        $this->provider->getConfiguration()->setChatHistory($history);
+        $chatMessage = new ChatMessage('Nice to meet you!');
+
+        $expected_url = sprintf(
+            'https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s',
+            ChatModel::Gemini2_5Flash->value,
+            'test-key'
+        );
+
+        Http::fake([
+            $expected_url => Http::response([
+                'candidates' => [
+                    [
+                        'content' => [
+                            'parts' => [
+                                ['text' => 'Nice to meet you too!']
+                            ]
+                        ]
+                    ]
+                ]
+            ])
+        ]);
+
+        $this->provider->chat($chatMessage);
+
+        Http::assertSent(function ($request) use ($expected_url) {
+            $data = json_decode($request->body(), true);
+            
+            return $request->url() === $expected_url
+                && $request->method() === 'POST'
+                && isset($data['contents'])
+                && count($data['contents']) === 4 // 3 history messages + 1 new message
+                && $data['contents'][0]['parts'][0]['text'] === 'What is your name?'
+                && $data['contents'][1]['parts'][0]['text'] === 'My name is AI Assistant'
+                && $data['contents'][2]['parts'][0]['text'] === 'How old are you?'
+                && $data['contents'][3]['parts'][0]['text'] === 'Nice to meet you!';
+        });
+    }
+
+
 
     protected function tearDown(): void
     {

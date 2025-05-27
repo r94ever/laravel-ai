@@ -20,9 +20,7 @@ class TextGeneration implements AITextGenerator
     private function generateRequestData(): string
     {
         $data = [
-            'contents' => [
-                ['parts' => [['text' => $this->userMessage->getMessage()]]]
-            ],
+            'contents' => [],
             'generationConfig' => [
                 'temperature' => $this->textGenerationConfig->getTemperature(),
                 'maxOutputTokens' => $this->textGenerationConfig->getMaxOutputTokens(),
@@ -36,6 +34,20 @@ class TextGeneration implements AITextGenerator
                 'parts' => [['text' => $this->textGenerationConfig->getInstruction()->getMessage()]]
             ];
         }
+
+        if ($this->textGenerationConfig->getChatHistory()->hasMessages()) {
+            foreach ($this->textGenerationConfig->getChatHistory()->getMessages() as $message) {
+                $data['contents'][] = [
+                    'parts' => [['text' => $message->getMessage()]],
+                    'role' => ChatRolesMapper::convert($message->getRole())
+                ];
+            }
+        }
+
+        $data['contents'][] = [
+            'parts' => [['text' => $this->userMessage->getMessage()]],
+            'role' => ChatMessage::ROLE_USER,
+        ];
 
         return json_encode($data, JSON_UNESCAPED_UNICODE);
     }

@@ -5,6 +5,7 @@ namespace R94ever\PHPAI\Providers\Gemini\Configs;
 use BackedEnum;
 use R94ever\PHPAI\Contracts\AIGenerationConfig;
 use R94ever\PHPAI\Exceptions\ChatbotException;
+use R94ever\PHPAI\Objects\ChatHistory;
 use R94ever\PHPAI\Objects\ChatMessage;
 
 class GenerationConfig implements AIGenerationConfig
@@ -60,6 +61,14 @@ class GenerationConfig implements AIGenerationConfig
      * @var BackedEnum
      */
     private BackedEnum $chatModel;
+
+    /**
+     * The chat history to maintain context during text generation.
+     * This can include previous messages and responses to provide context for the AI.
+     *
+     * @var ChatHistory
+     */
+    private ChatHistory $chatHistory;
 
     /**
      * Set the instruction message for the AI text generation.
@@ -212,5 +221,28 @@ class GenerationConfig implements AIGenerationConfig
     public function getTopK(): int
     {
         return $this->topK;
+    }
+
+    /**
+     * Get the chat history for maintaining context during text generation.
+     *
+     * @return ChatHistory The chat history object.
+     */
+    public function getChatHistory(): ChatHistory
+    {
+        return $this->chatHistory ?? new ChatHistory();
+    }
+
+    /**
+     * Set the chat history for maintaining context during text generation.
+     *
+     * @param ChatHistory $chatHistory The chat history object to set.
+     * @return AIGenerationConfig
+     */
+    public function setChatHistory(ChatHistory $chatHistory): AIGenerationConfig
+    {
+        $this->chatHistory = $chatHistory;
+
+        return $this;
     }
 }

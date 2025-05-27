@@ -10,15 +10,15 @@ use R94ever\PHPAI\Providers\Gemini\Configs\GenerationConfig;
 
 class GeminiProvider implements AIProvider
 {
-    private AIGenerationConfig $textGenerationConfig;
+    private AIGenerationConfig $generationConfig;
 
     public function getConfiguration(): AIGenerationConfig
     {
-        return $this->textGenerationConfig ??= new GenerationConfig();
+        return $this->generationConfig ??= new GenerationConfig();
     }
 
     public function chat(ChatMessage $chatMessage): AITextGeneratorResponse
     {
-        return (new TextGeneration($chatMessage, $this->textGenerationConfig))->generate();
+        return (new TextGeneration($chatMessage, $this->generationConfig))->generate();
     }
 }

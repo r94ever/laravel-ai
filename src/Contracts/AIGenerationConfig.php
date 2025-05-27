@@ -3,6 +3,7 @@
 namespace R94ever\PHPAI\Contracts;
 
 use BackedEnum;
+use R94ever\PHPAI\Objects\ChatHistory;
 use R94ever\PHPAI\Objects\ChatMessage;
 
 interface AIGenerationConfig
@@ -30,4 +31,8 @@ interface AIGenerationConfig
     public function getTopK(): float|int;
 
     public function setTopK(float|int $topK): self;
+
+    public function getChatHistory(): ChatHistory;
+
+    public function setChatHistory(ChatHistory $chatHistory): self;
 }

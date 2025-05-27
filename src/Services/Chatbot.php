@@ -5,12 +5,13 @@ namespace R94ever\PHPAI\Services;
 use BackedEnum;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
-use R94ever\PHPAI\ChatMessage;
 use R94ever\PHPAI\Contracts\AIProvider;
 use R94ever\PHPAI\Contracts\AITextGeneratorResponse;
 use R94ever\PHPAI\Events\ChatMessageSent;
 use R94ever\PHPAI\Events\ChatResponseReceived;
 use R94ever\PHPAI\Exceptions\ChatbotException;
+use R94ever\PHPAI\Objects\ChatHistory;
+use R94ever\PHPAI\Objects\ChatMessage;
 
 class Chatbot
 {
@@ -30,10 +31,12 @@ class Chatbot
     public function withInstruction(string|ChatMessage $instruction): self
     {
         if (is_string($instruction)) {
-            $instruction = new ChatMessage($instruction);
+            $instruction = ChatMessage::instructor($instruction);
         }
 
-        $this->provider->getConfiguration()->setInstruction($instruction);
+        $this->provider
+             ->getConfiguration()
+             ->setInstruction($instruction->setRole(ChatMessage::ROLE_INSTRUCTOR));
 
         return $this;
     }
@@ -62,6 +65,19 @@ class Chatbot
         tap($this->provider->getConfiguration(), function ($config) use ($callback) {
             $callback($config);
         });
+
+        return $this;
+    }
+
+    /**
+     * Set the chat history to be used for maintaining context.
+     *
+     * @param ChatHistory $chatHistory The chat history to set.
+     * @return self
+     */
+    public function withHistory(ChatHistory $chatHistory): self
+    {
+        $this->provider->getConfiguration()->setChatHistory($chatHistory);
 
         return $this;
     }
