@@ -1,0 +1,37 @@
+{
+    "name": "r94ever/phpai",
+    "description": "A simple AI package for PHP",
+    "type": "library",
+    "version": "0.0.1-alpha",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "R94ever\\PHPAI\\": "src/",
+            "R94ever\\PHPAI\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "VanDT147",
+            "email": "vandt147@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "illuminate/support": "^11.0|^12.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0",
+        "phpunit/phpunit": "^10.5"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "R94ever\\PHPAI\\PHPAIServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}
