@@ -5,7 +5,7 @@ A simple and powerful AI integration package for PHP applications, providing sea
 ## Requirements
 
 - PHP 8.2 or higher
-- Laravel 11.x or 12.x
+- Laravel 12.x or higher
 - Composer
 - Google Cloud Platform account with Gemini API access (for Gemini provider)
 
