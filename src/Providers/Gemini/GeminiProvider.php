@@ -2,23 +2,23 @@
 
 namespace R94ever\PHPAI\Providers\Gemini;
 
-use R94ever\PHPAI\ChatMessage;
 use R94ever\PHPAI\Contracts\AIProvider;
-use R94ever\PHPAI\Contracts\AITextGenerationConfig;
+use R94ever\PHPAI\Contracts\AIGenerationConfig;
 use R94ever\PHPAI\Contracts\AITextGeneratorResponse;
-use R94ever\PHPAI\Providers\Gemini\Configs\TextGenerationConfig;
+use R94ever\PHPAI\Objects\ChatMessage;
+use R94ever\PHPAI\Providers\Gemini\Configs\GenerationConfig;
 
 class GeminiProvider implements AIProvider
 {
-    private AITextGenerationConfig $textGenerationConfig;
+    private AIGenerationConfig $generationConfig;
 
-    public function getConfiguration(): AITextGenerationConfig
+    public function getConfiguration(): AIGenerationConfig
     {
-        return $this->textGenerationConfig ??= new TextGenerationConfig();
+        return $this->generationConfig ??= new GenerationConfig();
     }
 
     public function chat(ChatMessage $chatMessage): AITextGeneratorResponse
     {
-        return (new TextGeneration($chatMessage, $this->textGenerationConfig))->generate();
+        return (new TextGeneration($chatMessage, $this->generationConfig))->generate();
     }
 }

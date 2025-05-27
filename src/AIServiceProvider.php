@@ -6,7 +6,7 @@ use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use R94ever\PHPAI\Enums\AIProvider;
 
-class PHPAIServiceProvider extends ServiceProvider implements DeferrableProvider
+class AIServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Bootstrap any application services.

@@ -3,9 +3,10 @@
 namespace R94ever\PHPAI\Contracts;
 
 use BackedEnum;
-use R94ever\PHPAI\ChatMessage;
+use R94ever\PHPAI\Objects\ChatHistory;
+use R94ever\PHPAI\Objects\ChatMessage;
 
-interface AITextGenerationConfig
+interface AIGenerationConfig
 {
     public function getInstruction(): ?ChatMessage;
 
@@ -30,4 +31,8 @@ interface AITextGenerationConfig
     public function getTopK(): float|int;
 
     public function setTopK(float|int $topK): self;
+
+    public function getChatHistory(): ChatHistory;
+
+    public function setChatHistory(ChatHistory $chatHistory): self;
 }

@@ -3,7 +3,7 @@
 namespace R94ever\PHPAI\Tests;
 
 use Illuminate\Support\Facades\Http;
-use R94ever\PHPAI\PHPAIServiceProvider;
+use R94ever\PHPAI\AIServiceProvider;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
@@ -17,7 +17,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     protected function getPackageProviders($app): array
     {
         return [
-            PHPAIServiceProvider::class,
+            AIServiceProvider::class,
         ];
     }
 
