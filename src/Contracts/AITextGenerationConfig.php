@@ -3,7 +3,7 @@
 namespace R94ever\PHPAI\Contracts;
 
 use BackedEnum;
-use R94ever\PHPAI\ChatMessage;
+use R94ever\PHPAI\Objects\ChatMessage;
 
 interface AITextGenerationConfig
 {

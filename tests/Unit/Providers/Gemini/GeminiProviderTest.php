@@ -4,9 +4,9 @@ namespace R94ever\PHPAI\Tests\Unit\Providers\Gemini;
 
 use Illuminate\Support\Facades\Http;
 use Mockery;
-use R94ever\PHPAI\ChatMessage;
 use R94ever\PHPAI\Contracts\AITextGenerationConfig;
 use R94ever\PHPAI\Contracts\AITextGeneratorResponse;
+use R94ever\PHPAI\Objects\ChatMessage;
 use R94ever\PHPAI\Providers\Gemini\ChatModel;
 use R94ever\PHPAI\Providers\Gemini\GeminiProvider;
 use R94ever\PHPAI\Tests\TestCase;

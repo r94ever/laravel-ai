@@ -3,10 +3,10 @@
 namespace R94ever\PHPAI\Providers\Gemini;
 
 use Illuminate\Support\Facades\Http;
-use R94ever\PHPAI\ChatMessage;
 use R94ever\PHPAI\Contracts\AITextGenerationConfig;
 use R94ever\PHPAI\Contracts\AITextGenerator;
 use R94ever\PHPAI\Contracts\AITextGeneratorResponse;
+use R94ever\PHPAI\Objects\ChatMessage;
 
 class TextGeneration implements AITextGenerator
 {

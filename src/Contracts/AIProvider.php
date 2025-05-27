@@ -2,7 +2,7 @@
 
 namespace R94ever\PHPAI\Contracts;
 
-use R94ever\PHPAI\ChatMessage;
+use R94ever\PHPAI\Objects\ChatMessage;
 
 interface AIProvider
 {

@@ -3,9 +3,9 @@
 namespace R94ever\PHPAI\Providers\Gemini\Configs;
 
 use BackedEnum;
-use R94ever\PHPAI\ChatMessage;
 use R94ever\PHPAI\Contracts\AITextGenerationConfig;
 use R94ever\PHPAI\Exceptions\ChatbotException;
+use R94ever\PHPAI\Objects\ChatMessage;
 
 class TextGenerationConfig implements AITextGenerationConfig
 {

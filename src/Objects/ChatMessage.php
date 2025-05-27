@@ -1,6 +1,6 @@
 <?php
 
-namespace R94ever\PHPAI;
+namespace R94ever\PHPAI\Objects;
 
 class ChatMessage
 {

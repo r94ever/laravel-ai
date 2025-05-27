@@ -2,17 +2,17 @@
 
 namespace R94ever\PHPAI\Tests\Unit\Services;
 
+use Illuminate\Support\Facades\Event;
 use Mockery;
-use R94ever\PHPAI\ChatMessage;
 use R94ever\PHPAI\Contracts\AIProvider;
 use R94ever\PHPAI\Contracts\AITextGeneratorResponse;
 use R94ever\PHPAI\Events\ChatMessageSent;
 use R94ever\PHPAI\Events\ChatResponseReceived;
 use R94ever\PHPAI\Exceptions\ChatbotException;
 use R94ever\PHPAI\Facades\AI;
+use R94ever\PHPAI\Objects\ChatMessage;
 use R94ever\PHPAI\Services\Chatbot;
 use R94ever\PHPAI\Tests\TestCase;
-use Illuminate\Support\Facades\Event;
 
 class ChatbotTest extends TestCase
 {
