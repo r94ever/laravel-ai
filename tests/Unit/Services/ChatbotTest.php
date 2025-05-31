@@ -4,7 +4,7 @@ namespace R94ever\PHPAI\Tests\Unit\Services;
 
 use Illuminate\Support\Facades\Event;
 use Mockery;
-use R94ever\PHPAI\Contracts\AIProvider;
+use R94ever\PHPAI\Contracts\ChatbotProvider;
 use R94ever\PHPAI\Contracts\AIGenerationConfig;
 use R94ever\PHPAI\Contracts\AITextGeneratorResponse;
 use R94ever\PHPAI\Events\ChatMessageSent;
@@ -22,7 +22,7 @@ class ChatbotTest extends TestCase
     {
         Event::fake();
 
-        $provider = Mockery::mock(AIProvider::class);
+        $provider = Mockery::mock(ChatbotProvider::class);
 
         $message = "Hello, how are you?";
         $expectedResponse = "I'm doing great, thanks for asking!";
@@ -65,7 +65,7 @@ class ChatbotTest extends TestCase
 
     public function test_it_can_set_chat_history()
     {
-        $provider = Mockery::mock(AIProvider::class);
+        $provider = Mockery::mock(ChatbotProvider::class);
         $config = Mockery::mock(AIGenerationConfig::class);
 
         $provider->shouldReceive('getConfiguration')->andReturn($config);
@@ -86,7 +86,7 @@ class ChatbotTest extends TestCase
     {
         Event::fake();
 
-        $provider = Mockery::mock(AIProvider::class);
+        $provider = Mockery::mock(ChatbotProvider::class);
         $config = Mockery::mock(AIGenerationConfig::class);
         $history = new ChatHistory([
             new ChatMessage('What is your name?'),

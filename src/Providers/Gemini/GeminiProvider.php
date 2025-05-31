@@ -2,13 +2,13 @@
 
 namespace R94ever\PHPAI\Providers\Gemini;
 
-use R94ever\PHPAI\Contracts\AIProvider;
+use R94ever\PHPAI\Contracts\ChatbotProvider;
 use R94ever\PHPAI\Contracts\AIGenerationConfig;
 use R94ever\PHPAI\Contracts\AITextGeneratorResponse;
 use R94ever\PHPAI\Objects\ChatMessage;
 use R94ever\PHPAI\Providers\Gemini\Configs\GenerationConfig;
 
-class GeminiProvider implements AIProvider
+class GeminiProvider implements ChatbotProvider
 {
     private AIGenerationConfig $generationConfig;
 

@@ -2,6 +2,20 @@
 
 A simple and powerful AI integration package for PHP applications, providing seamless integration with various AI providers. Currently supports Google Gemini AI, with planned support for OpenAI and Anthropic Claude.
 
+## Features
+
+- 🤖 Multiple AI Provider Support
+- 💬 Advanced Chat Capabilities
+- 🔄 Conversation History Management
+- ⚙️ Flexible Configuration System
+- 🎯 Multiple Model Support
+- 📊 Token Usage Tracking
+- 🔍 Detailed Response Analysis
+- 🛡️ Exception Handling & Error Management
+- 📝 Event Logging System
+- 🔒 Security First Approach
+- 🧪 Comprehensive Testing Suite
+
 ## Requirements
 
 - PHP 8.2 or higher
@@ -27,47 +41,64 @@ The package will automatically register itself if you're using Laravel. To publi
 php artisan vendor:publish --provider="R94ever\PHPAI\AIServiceProvider"
 ```
 
-This will create a `phpai.php` configuration file in your `config` directory. The configuration file includes:
+This will create a `phpai.php` configuration file in your `config` directory:
 
 ```php
 return [
-    // Default AI provider to use
-    'default_provider' => env('AI_DEFAULT_PROVIDER', 'gemini'),
-
-    // Provider-specific configurations
-    'providers' => [
-        'gemini' => [
-            'api_key' => env('GEMINI_API_KEY', ''),
+    'chatbot' => [
+        'providers' => [
+            'gemini' => [
+                'handler' => \R94ever\PHPAI\Providers\Gemini\GeminiProvider::class,
+                'api_key' => env('CHATBOT_GEMINI_API_KEY', ''),
+            ],
+            // Add more providers here
         ],
-    ],
+    ]
 ];
 ```
 
 Add the following environment variables to your `.env` file:
 
 ```env
-AI_DEFAULT_PROVIDER=gemini
-GEMINI_API_KEY=your-gemini-api-key
+CHATBOT_GEMINI_API_KEY=your-gemini-api-key
 ```
 
-## Usage
+## Architecture
 
-### Basic Usage
+The package follows a clean, modular architecture:
+
+### Core Components
+
+- **AI Service**: Main entry point for interacting with AI capabilities
+- **Provider Manager**: Manages and coordinates different AI providers 
+- **Chatbot Service**: Handles chat interactions with AI providers
+
+### Provider System
+
+- **Provider Interface**: Standard interface for implementing AI providers
+- **Configuration System**: Flexible provider-specific configurations
+- **Response Handling**: Standardized response processing
+
+### Event System
+
+- Message Sent Events
+- Response Received Events
+- Error Events
+
+## Basic Usage
 
 ```php
 use R94ever\PHPAI\Facades\AI;
 
 // Simple chat
-$response = AI::chatbot()->chat('Hello, how are you?');
-echo $response->getMessage();
+$response = AI::chatbot()
+    ->chat('Hello, how are you?');
 
-// Chat with custom configuration
+// Chat with specific configuration
 $response = AI::chatbot()
     ->withConfig(function ($config) {
         $config->setTemperature(0.7)
-               ->setMaxOutputTokens(500)
-               ->setTopP(0.8)
-               ->setTopK(10);
+               ->setMaxOutputTokens(500);
     })
     ->chat('Write a poem about AI');
 
@@ -90,7 +121,9 @@ $response = AI::chatbot()
     ->chat('Nice to meet you!');
 ```
 
-### Available Models
+## Advanced Usage
+
+### Custom Models
 
 When using the Gemini provider, you can choose from several available models:
 
@@ -103,259 +136,84 @@ $response = AI::chatbot()
 ```
 
 Available models:
-- `Gemini2_5FlashPreview05_20`: Best price-performance model with well-rounded capabilities
-- `Gemini2_5ProPreview`: State-of-the-art thinking model for complex reasoning
-- `Gemini2_5Flash`: Next-gen features with superior speed
-- `Gemini2_0FlashLite`: Cost-efficient model with low latency
-- `Gemini1_5Flash`: Fast and versatile multimodal model
-- `Gemini1_5Flash8b`: Small model for simpler tasks
-- `Gemini1_5Pro`: Mid-size model optimized for reasoning tasks
-- `Gemini2_0FlashLive`: Real-time model for low-latency interactions
 
-### Configuration Options
+#### New Generation Models
+- `Gemini2_5FlashPreview05_20`: Latest preview model with best price-performance ratio
+- `Gemini2_5ProPreview`: Advanced model for complex reasoning tasks
+- `Gemini2_5Flash`: High-speed next-gen features
 
-The following configuration options are available when using the chat API:
-
-| Option | Description | Default | Range |
-|--------|-------------|---------|--------|
-| temperature | Controls randomness in responses | 1.0 | 0.0 - 1.0 |
-| maxOutputTokens | Maximum length of generated text | 800 | > 0 |
-| topP | Nucleus sampling threshold | 0.8 | 0.0 - 1.0 |
-| topK | Top-k sampling threshold | 10 | ≥ 0 |
+#### Standard Models
+- `Gemini2_0FlashLite`: Cost-efficient with low latency
+- `Gemini1_5Flash`: Versatile multimodal model
+- `Gemini1_5Flash8b`: Compact model for simple tasks
+- `Gemini1_5Pro`: Balanced model for reasoning tasks
+- `Gemini2_0FlashLive`: Real-time interaction model
 
 ### Response Handling
-
-The chat response object provides several methods for handling the AI's response:
 
 ```php
 $response = AI::chatbot()->chat('Hello');
 
-// Get the main response message
+// Get message content
 $message = $response->getMessage();
 
-// Check if the request was successful
+// Success/Error checking
 if ($response->isSuccess()) {
-    // Handle success
-}
-
-// Get error messages if the request failed
-if ($response->isFailed()) {
+    // Handle success case
+} else {
     $errorMessage = $response->getFailedMessage();
 }
 
-// Get token usage information
+// Token usage metrics
 $inputTokens = $response->getInputTokens();
 $outputTokens = $response->getOutputTokens();
 $totalTokens = $response->getTotalTokens();
 
-// Get response metadata
+// Additional metadata
 $statusCode = $response->getStatusCode();
 $modelVersion = $response->getModelVersion();
 $responseId = $response->getResponseId();
 ```
 
-## Events
+### Event System
 
-The package provides events that you can listen to for monitoring and logging purposes:
-
-### ChatMessageSent
-
-Triggered when a message is sent to the AI provider. Contains:
-- `message`: The message text sent to the AI
-- `userId`: Optional user identifier
-
-```php
-Event::listen(function (ChatMessageSent $event) {
-    Log::info('Chat message sent:', [
-        'message' => $event->message,
-        'user' => $event->userId
-    ]);
-});
-```
-
-### ChatResponseReceived
-
-Triggered when a response is received from the AI provider. Contains:
-- `message`: The original message
-- `response`: The AI response object
-- `userId`: Optional user identifier
-
-```php
-Event::listen(function (ChatResponseReceived $event) {
-    Log::info('Chat response received:', [
-        'message' => $event->message,
-        'response' => $event->response->getMessage(),
-        'user' => $event->userId
-    ]);
-});
-```
-
-## Roadmap
-
-### 1. Custom AI Provider Support
-- Allow registration of custom AI providers
-- Implement provider interface for easy integration
-- Support for provider-specific configurations
-
-### 2. AI Image Generation
-- Integration with DALL-E, Stable Diffusion, and Midjourney
-- Support for multiple image styles and sizes
-- Image manipulation and editing capabilities
-
-### 3. AI Video Generation
-- Text-to-video generation
-- Video editing and manipulation
-- Support for multiple video formats and styles
-
-### 4. Embeddings & Vector Stores
-- Text embedding generation
-- Integration with popular vector databases
-- Semantic search capabilities
-- Document similarity analysis
-- Support for various vector store providers (Pinecone, Milvus, etc.)
-
-## Security Considerations
-
-### API Key Protection
-
-Always store your API keys in environment variables or secure configuration storage. Never commit API keys to version control:
-
-```php
-// .env
-GEMINI_API_KEY=your-key-here
-
-// config/phpai.php
-'providers' => [
-    'gemini' => [
-        'api_key' => env('GEMINI_API_KEY'),
-    ],
-]
-```
-
-### Rate Limiting
-
-Different Gemini models have different rate limits:
-
-- Gemini 2.5 Flash Preview: More restricted rate limits (experimental)
-- Gemini 2.5 Pro Preview: Limited rate limits during preview
-- Gemini 2.0 Flash: Standard rate limits
-- Gemini 1.5 Models: Standard rate limits
-
-Implement appropriate rate limiting in your application to avoid hitting API limits:
-
-```php
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\RateLimiter;
-
-// Example rate limiting implementation
-if (RateLimiter::tooManyAttempts('ai-chat:'.$userId, $perMinuteLimit)) {
-    throw new ChatbotException('Too many requests. Please try again later.');
-}
-
-RateLimiter::hit('ai-chat:'.$userId);
-```
-
-### Content Filtering
-
-The package respects Gemini's built-in content filtering. However, you may want to implement additional content filtering:
+The package provides comprehensive event tracking:
 
 ```php
 use R94ever\PHPAI\Events\ChatMessageSent;
+use R94ever\PHPAI\Events\ChatResponseReceived;
 
+// Track sent messages
 Event::listen(function (ChatMessageSent $event) {
-    // Implement your content filtering logic
-    if (containsSensitiveContent($event->message)) {
-        throw new ChatbotException('Message contains inappropriate content');
-    }
-});
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **API Key Issues**
-```php
-// Error: API key not valid
-// Solution: Check your .env file and ensure the API key is correct
-config(['phpai.providers.gemini.api_key' => 'your-new-key']);
-```
-
-2. **Rate Limiting**
-```php
-// Error: Rate limit exceeded
-// Solution: Implement exponential backoff
-try {
-    $response = AI::chatbot()->chat($message);
-} catch (Exception $e) {
-    if (str_contains($e->getMessage(), 'rate limit')) {
-        sleep(pow(2, $retryAttempt));
-        // Retry the request
-    }
-}
-```
-
-3. **Model Availability**
-```php
-// Error: Model not available
-// Solution: Fall back to an alternative model
-try {
-    $response = AI::chatbot()
-        ->useModel(ChatModel::Gemini2_5Flash)
-        ->chat($message);
-} catch (Exception $e) {
-    // Fall back to a more stable model
-    $response = AI::chatbot()
-        ->useModel(ChatModel::Gemini1_5Flash)
-        ->chat($message);
-}
-```
-
-### Debugging
-
-Enable debug mode in your Laravel application to see detailed error messages:
-
-```php
-// config/app.php
-'debug' => env('APP_DEBUG', true)
-```
-
-Use the events system for debugging:
-
-```php
-Event::listen(function (ChatMessageSent $event) {
-    Log::debug('AI Chat Message:', [
+    Log::info('Message sent:', [
         'message' => $event->message,
         'user' => $event->userId
     ]);
 });
 
+// Track responses
 Event::listen(function (ChatResponseReceived $event) {
-    Log::debug('AI Response:', [
-        'status' => $event->response->getStatusCode(),
-        'tokens' => $event->response->getTotalTokens(),
-        'model' => $event->response->getModelVersion()
+    Log::info('Response received:', [
+        'original' => $event->message,
+        'response' => $event->response->getMessage(),
+        'metrics' => [
+            'tokens' => $event->response->getTotalTokens(),
+            'model' => $event->response->getModelVersion()
+        ]
     ]);
 });
 ```
 
-## Versioning
+### Custom Providers
 
-See [CHANGELOG.md](CHANGELOG.md) for a full list of changes between versions.
-
-## Advanced Usage
-
-### Custom AI Providers
-
-You can implement custom AI providers by implementing the `AIProvider` interface:
+Implement your own AI providers:
 
 ```php
-use R94ever\PHPAI\Contracts\AIProvider;
+use R94ever\PHPAI\Contracts\ChatbotProvider;
 use R94ever\PHPAI\Contracts\AIGenerationConfig;
 use R94ever\PHPAI\Contracts\AITextGeneratorResponse;
-use R94ever\PHPAI\Objects\ChatMessage;
 
-class CustomProvider implements AIProvider
+class CustomProvider implements ChatbotProvider
 {
     private AIGenerationConfig $config;
 
@@ -366,34 +224,85 @@ class CustomProvider implements AIProvider
 
     public function chat(ChatMessage $chatMessage): AITextGeneratorResponse
     {
-        // Implement your custom chat logic here
+        // Custom implementation
     }
 }
 ```
 
-### Error Handling
-
-The package uses exceptions to handle errors:
+Register your custom provider in your service provider's `boot` method:
 
 ```php
-use R94ever\PHPAI\Exceptions\ChatbotException;
+namespace App\Providers;
 
-try {
-    $response = AI::chatbot()->chat('');
-} catch (ChatbotException $e) {
-    // Handle empty message error
+use Illuminate\Support\ServiceProvider;
+use R94ever\PHPAI\Services\ChatbotProvidersManager;
+use Your\Custom\Provider\CustomProvider;
+
+class AIServiceProvider extends ServiceProvider
+{
+    public function boot(): void
+    {
+        $this->app->make(ChatbotProvidersManager::class)
+            ->register('custom', new CustomProvider());
+
+        // You can also set it as the default provider
+        $this->app->make(ChatbotProvidersManager::class)
+            ->setDefault('custom');
+    }
 }
 
-try {
-    $config->setTopP(2.0);
-} catch (ChatbotException $e) {
-    // Handle invalid configuration error
-}
+// Don't forget to register your service provider in config/app.php
+'providers' => [
+    // ...
+    App\Providers\AIServiceProvider::class,
+],
 ```
 
-### Testing
+## Security
 
-The package includes a comprehensive test suite. To run the tests:
+### API Key Protection
+
+Always store API keys securely:
+
+```php
+// .env
+CHATBOT_GEMINI_API_KEY=your-api-key
+
+// config/phpai.php
+'providers' => [
+    'gemini' => [
+        'api_key' => env('CHATBOT_GEMINI_API_KEY'),
+    ],
+]
+```
+
+### Rate Limiting
+
+Implement rate limiting to protect your API usage:
+
+```php
+if (RateLimiter::tooManyAttempts('ai-chat:'.$userId, $perMinuteLimit)) {
+    throw new ChatbotException('Rate limit exceeded');
+}
+
+RateLimiter::hit('ai-chat:'.$userId);
+```
+
+### Content Filtering
+
+Add content filtering logic:
+
+```php
+Event::listen(function (ChatMessageSent $event) {
+    if (containsSensitiveContent($event->message)) {
+        throw new ChatbotException('Inappropriate content');
+    }
+});
+```
+
+## Testing
+
+The package includes comprehensive tests:
 
 ```bash
 composer test
@@ -401,23 +310,18 @@ composer test
 
 ## Contributing
 
-We welcome contributions to improve the package! Please follow these steps:
+Contributions are welcome! Please:
 
 1. Fork the repository
-2. Create a new branch (`git checkout -b feature/amazing-feature`)
+2. Create a feature branch
 3. Make your changes
-4. Run the tests (`composer test`)
-5. Commit your changes (`git commit -m 'Add some amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
-
-## Author
-
-- **VanDT147** - [vandt147@gmail.com](mailto:vandt147@gmail.com)
+4. Run tests
+5. Submit a pull request
 
 ## Support
 
-If you discover any issues or have questions, please create an issue on GitHub.
+- Create issues on GitHub
+- Email support: vandt147@gmail.com
 
 ## License
 

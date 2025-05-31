@@ -4,7 +4,7 @@ namespace R94ever\PHPAI\Contracts;
 
 use R94ever\PHPAI\Objects\ChatMessage;
 
-interface AIProvider
+interface ChatbotProvider
 {
     public function chat(ChatMessage $chatMessage): AITextGeneratorResponse;
 
