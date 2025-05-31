@@ -5,7 +5,7 @@ namespace R94ever\PHPAI\Services;
 use BackedEnum;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
-use R94ever\PHPAI\Contracts\AIProvider;
+use R94ever\PHPAI\Contracts\ChatbotProvider;
 use R94ever\PHPAI\Contracts\AITextGeneratorResponse;
 use R94ever\PHPAI\Events\ChatMessageSent;
 use R94ever\PHPAI\Events\ChatResponseReceived;
@@ -18,9 +18,9 @@ class Chatbot
     /**
      * Create a new Chatbot instance.
      *
-     * @param AIProvider $provider The AI provider to use for chat operations.
+     * @param ChatbotProvider $provider The AI provider to use for chat operations.
      */
-    public function __construct(readonly private AIProvider $provider) {}
+    public function __construct(readonly private ChatbotProvider $provider) {}
 
     /**
      * Set the instruction message to be used as a system prompt.

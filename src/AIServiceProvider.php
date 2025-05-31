@@ -4,7 +4,7 @@ namespace R94ever\PHPAI;
 
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
-use R94ever\PHPAI\Enums\AIProvider;
+use R94ever\PHPAI\Services\ChatbotProvidersManager;
 
 class AIServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -17,7 +17,7 @@ class AIServiceProvider extends ServiceProvider implements DeferrableProvider
     {
         $this->publishes([
             __DIR__.'/../config/phpai.php' => config_path('phpai.php')
-        ], 'phpai-config');
+        ], 'phpai');
     }
 
     /**
@@ -27,11 +27,10 @@ class AIServiceProvider extends ServiceProvider implements DeferrableProvider
      */
     public function register(): void
     {
-        $this->app->singleton(AI::class, function ($app) {
-            $providerName = AIProvider::from(config('phpai.default_provider'));
-            $provider = $providerName->createProvider();
+        $this->app->singleton(ChatbotProvidersManager::class);
 
-            return new AI($provider);
+        $this->app->singleton(AI::class, function ($app) {
+            return new AI($app->make(ChatbotProvidersManager::class));
         });
 
         $this->app->alias(AI::class, 'ai');
@@ -41,6 +40,7 @@ class AIServiceProvider extends ServiceProvider implements DeferrableProvider
     {
         return [
             AI::class,
+            ChatbotProvidersManager::class,
         ];
     }
 }

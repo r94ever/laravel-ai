@@ -17,7 +17,7 @@ class AITest extends TestCase
 
     public function test_it_uses_configured_default_provider()
     {
-        config()->set('phpai.default_provider', 'gemini');
+        config()->set('phpai.chatbot.default_provider', 'gemini');
         $ai = $this->app->make(AI::class);
         $this->assertInstanceOf(Chatbot::class, $ai->chatbot());
     }
