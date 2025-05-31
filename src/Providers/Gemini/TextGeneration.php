@@ -57,7 +57,7 @@ class TextGeneration implements AITextGenerator
         return sprintf(
             'https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s',
             $this->textGenerationConfig->getChatModel()->value,
-            config('phpai.providers.gemini.api_key'),
+            config('phpai.chatbot.providers.gemini.api_key'),
         );
     }
 

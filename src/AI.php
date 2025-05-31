@@ -2,20 +2,24 @@
 
 namespace R94ever\PHPAI;
 
-use R94ever\PHPAI\Contracts\AIProvider;
+use R94ever\PHPAI\Contracts\ChatbotProvider;
 use R94ever\PHPAI\Services\Chatbot;
+use R94ever\PHPAI\Services\ChatbotProvidersManager;
+use RuntimeException;
 
 class AI
 {
-    private AIProvider $defaultProvider;
-
-    public function __construct(AIProvider $defaultProvider)
+    public function __construct(private readonly ChatbotProvidersManager $chatbotProvidersManager)
     {
-        $this->defaultProvider = $defaultProvider;
+        //
     }
 
-    public function chatbot(?AIProvider $provider = null): Chatbot
+    public function chatbot(?ChatbotProvider $provider = null): Chatbot
     {
-        return new Chatbot($provider ?? $this->defaultProvider);
+        if ($this->chatbotProvidersManager->isEmpty()) {
+            throw new RuntimeException('No chatbot providers registered. Please register at least one provider.');
+        }
+
+        return new Chatbot($provider ?? $this->chatbotProvidersManager->getDefault());
     }
 }

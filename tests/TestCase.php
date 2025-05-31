@@ -32,7 +32,17 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         ]);
 
         // Setup PHPAI config
+        $app['config']->set('phpai.chatbot', [
+            'default_provider' => 'gemini',
+            'providers' => [
+                'gemini' => [
+                    'handler' => \R94ever\PHPAI\Providers\Gemini\GeminiProvider::class,
+                    'api_key' => 'test-key'
+                ]
+            ]
+        ]);
+        
+        // Set default provider
         $app['config']->set('phpai.default_provider', 'gemini');
-        $app['config']->set('phpai.providers.gemini.api_key', 'test-key');
     }
 }
