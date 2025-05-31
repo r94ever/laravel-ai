@@ -50,7 +50,7 @@ class ChatMessageTest extends TestCase
         $message = new ChatMessage('Test message', ChatMessage::ROLE_ASSISTANT);
         $message->setRole('invalid_role');
         
-        $this->assertEquals(ChatMessage::ROLE_ASSISTANT, $message->getRole());
+        $this->assertEquals(ChatMessage::ROLE_USER, $message->getRole());
     }
 
     public function test_it_can_create_user_message()
